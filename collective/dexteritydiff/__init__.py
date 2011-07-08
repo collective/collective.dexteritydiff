@@ -1,0 +1,4 @@
+from Products.CMFDiffTool.CMFDiffTool import registerDiffType
+from .compounddiff import DexterityCompoundDiff
+
+registerDiffType(DexterityCompoundDiff)
