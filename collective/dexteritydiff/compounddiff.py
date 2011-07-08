@@ -7,34 +7,33 @@ from plone.dexterity.interfaces import IDexterityFTI
 from plone.dexterity.utils import getAdditionalSchemata
 from zope.app.content import queryContentType
 from zope.component import getUtility, getUtility
-from zope.schema import (Bytes, ASCII, BytesLine, ASCIILine, Choice, Field, Container, Iterable, 
-    InterfaceField, Object, URI, Id, DottedName, Password, Dict, Datetime, Date, Timedelta, Text, 
-    TextLine, Bool, Int, Float, Decimal, Time, SourceText, Tuple, List, Set, FrozenSet, getFieldsInOrder)
+from zope.schema import Bytes, Iterable, Container, Text, getFieldsInOrder
 
-SIMPLE_FIELDS = (
-    Field, Bool, Int, Float, Decimal, Datetime, Date, Timedelta, Time, Object, URI, Id, 
-    DottedName, InterfaceField, Choice
-)
-
-FIELD_MAPPING = [
-    ((Tuple, List, Set, FrozenSet,), ListDiff),
-    ((Text, TextLine, SourceText), TextDiff),    
-    ((Bytes,), BinaryDiff),
-    (SIMPLE_FIELDS, FieldDiff),    
+FIELDS_AND_DIFF_TYPES_RELATION = [
+    ((Iterable, Container), ListDiff),
+    ((Text, Bytes), TextDiff),
 ]
-# Order must be more specific field types must be on top.
-    
+"""
+Relates fields (`zope.schema.Field` subclasses) and "diff types"
+(`Products.CMFEditions.BaseDiff.BaseDiff` subclasses). 
 
+To find the best diff type for a field this list will be searched until a match is found. 
+If a match is not found then `FALL_BACK_DIFF_TYPE` is used.  
+""" 
+
+FALL_BACK_DIFF_TYPE = FieldDiff
+    
 EXCLUDED_FIELDS = ('modification_date', 'changeNote')
+"""Names of fiels not to compare."""
+
 class DexterityCompoundDiff(object):
+    """Same as `Products.CMFDiffTool.ATCompoundDiff.ATCompoundDiff` but for Dexterity."""
     
     meta_type = 'Compound Diff for Dexterity types'
         
     def __init__(self, obj1, obj2, field, id1=None, id2=None):
         self.id1 = id1 or obj1.getId()
         self.id2 = id2 or obj2.getId()
-
-                
         self._diffs = self._diff(obj1, obj2)
     
     def __getitem__(self, index):
@@ -49,6 +48,7 @@ class DexterityCompoundDiff(object):
     def _diff(self, obj1, obj2):
         """
         Compute the differences between 2 objects.
+        
         Return: a sequence of `IDifference` objects.
         """
         fti = getUtility(IDexterityFTI, name=obj1.portal_type)
@@ -64,6 +64,7 @@ class DexterityCompoundDiff(object):
     def _diff_schema(self, obj1, obj2, schema, schema_name):
         """
         Compute the differences between 2 objects in respect to the given schema interface.
+        
         Return: a sequence of `IDifference` objects.
         """
         return [
@@ -74,7 +75,9 @@ class DexterityCompoundDiff(object):
     
     def _diff_field(self, obj1, obj2, field, schema_name):
         """
-        Compute the differences between 2 objects in respect to the given field.
+        Compute the differences between 2 objects in respect to the given field 
+        (`zope.schema.Field` instance).
+        
         Return: an `IDifference` object.
         """        
         diff_type = self._get_diff_type(field)
@@ -88,15 +91,14 @@ class DexterityCompoundDiff(object):
             field_label=field.title,
             schemata=schema_name
         )        
-        
     
     def _get_diff_type(self, field):
         """
         Return a subclass of `Products.CMFEditions.BaseDiff.BaseDiff` suitable for the given 
         `zope.schema.Field` instance.
         """
-        for (field_types, diff_type) in FIELD_MAPPING:
+        for (field_types, diff_type) in FIELDS_AND_DIFF_TYPES_RELATION:
             if isinstance(field, field_types):
                 return diff_type
         
-        raise RuntimeError('Could not find a suitable diff type for the field %s' % field)              
+        return FALL_BACK_DIFF_TYPE              
