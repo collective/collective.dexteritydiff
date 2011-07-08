@@ -11,7 +11,7 @@ class InstallTestCase(unittest.TestCase):
         self.portal = self.layer['portal']    
         self.diff_tool = getToolByName(self.portal, 'portal_diff')
     
-    def test_grupo_site_admin_deve_ter_as_roles_corretas(self):
+    def test_compound_diff_type_should_be_registered(self):
         self.assertIn(DexterityCompoundDiff.meta_type, self.diff_tool.listDiffTypes())
         self.assertTrue(self.diff_tool.getDiffType(DexterityCompoundDiff.meta_type))
         
