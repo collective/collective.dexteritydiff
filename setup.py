@@ -25,12 +25,14 @@ setup(name='collective.dexteritydiff',
       zip_safe=False,
       install_requires=[
           'setuptools',
+          'z3c.autoinclude',
           'Products.CMFEditions',
           'Plone'
       ],
       extras_require = {
         'test': [
             'plone.app.testing',
+            'plone.app.dexterity'
         ]
       },      
       entry_points="""
