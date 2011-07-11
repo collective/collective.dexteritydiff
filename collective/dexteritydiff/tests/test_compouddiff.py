@@ -34,9 +34,11 @@ class CompoundDiffTestCase(unittest.TestCase):
         obj2 = self.portal['obj2']
         
         diffs = DexterityCompoundDiff(obj1, obj2, 'any')
-        self.assertEqual(3, len(diffs))
+        self.assertEqual(4, len(diffs))
         for d in diffs:
             self.assertTrue(IDifference.providedBy(d))
+        
+        
         
         
         

@@ -1,23 +1,23 @@
-from Products.CMFDiffTool.BinaryDiff import BinaryDiff
-from Products.CMFDiffTool.CMFDTHtmlDiff import CMFDTHtmlDiff
 from Products.CMFDiffTool.FieldDiff import FieldDiff
 from Products.CMFDiffTool.ListDiff import ListDiff
 from Products.CMFDiffTool.TextDiff import TextDiff
 from plone.dexterity.interfaces import IDexterityFTI
 from plone.dexterity.utils import getAdditionalSchemata
-from zope.app.content import queryContentType
-from zope.component import getUtility, getUtility
+from zope.component import getUtility
 from zope.schema import Bytes, Iterable, Container, Text, getFieldsInOrder
+from .filefields import FILE_FIELD_TYPES
+from .binarydiff import DexterityBinaryDiff
 
 FIELDS_AND_DIFF_TYPES_RELATION = [
+    (FILE_FIELD_TYPES, DexterityBinaryDiff),
     ((Iterable, Container), ListDiff),
     ((Text, Bytes), TextDiff),
 ]
 """
-Relates fields (`zope.schema.Field` subclasses) and "diff types"
+Relates field types (`zope.schema.Field` subclasses) and "diff types"
 (`Products.CMFEditions.BaseDiff.BaseDiff` subclasses). 
 
-To find the best diff type for a field this list will be searched until a match is found. 
+To find the best diff type for a field type this list will be searched until a match is found. 
 If a match is not found then `FALL_BACK_DIFF_TYPE` is used.  
 """ 
 
@@ -79,7 +79,7 @@ class DexterityCompoundDiff(object):
         (`zope.schema.Field` instance).
         
         Return: an `IDifference` object.
-        """        
+        """                
         diff_type = self._get_diff_type(field)
         return diff_type(
             obj1, 
@@ -101,4 +101,4 @@ class DexterityCompoundDiff(object):
             if isinstance(field, field_types):
                 return diff_type
         
-        return FALL_BACK_DIFF_TYPE              
+        return FALL_BACK_DIFF_TYPE       

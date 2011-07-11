@@ -1,7 +1,7 @@
 Introduction
 ============
 
-Provide the ``DexterityCompoundDiff`` diff type for `Products.CMFEditions`_, analogous to 
+Provide the ``DexterityCompoundDiff`` diff type for `Products.CMFDiffTool`_, analogous to 
 ``ATCompoudDiff``.
 
 This is a package to help enable content versioning for Dexterity_ content types. To enable 
@@ -18,6 +18,6 @@ You can enable versioning on Dexterity content types without this package, but t
 to add the correct "diff type" for each field of your content type.
 
 .. References
-.. _`Products.CMFEditions`: http://pypi.python.org/pypi/Products.CMFEditions
+.. _`Products.CMFDiffTool`: http://pypi.python.org/pypi/Products.CMFEditions
 .. _Dexterity: http://pypi.python.org/pypi/plone.app.dexterity
 .. _`plone.app.versioningbehavior`: http://pypi.python.org/pypi/plone.app.versioningbehavior

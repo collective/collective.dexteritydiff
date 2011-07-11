@@ -37,6 +37,10 @@ class PackageLayer(PloneSandboxLayer):
                         <title>Text</title>
                         <required>False</required>
                     </field>
+                    <field name="file" type="plone.namedfile.field.NamedFile">
+                        <title>File</title>
+                        <required>False</required>
+                    </field>                    
                 </schema>
             </model>
             '''

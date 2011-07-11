@@ -26,13 +26,15 @@ setup(name='collective.dexteritydiff',
       install_requires=[
           'setuptools',
           'z3c.autoinclude',
-          'Products.CMFEditions',
-          'Plone'
+          'Products.CMFDiffTool',
+          'Plone',
+          'plone.app.dexterity',
       ],
       extras_require = {
         'test': [
             'plone.app.testing',
-            'plone.app.dexterity'
+            'plone.namedfile',
+            'plone.formwidget.namedfile',
         ]
       },      
       entry_points="""
