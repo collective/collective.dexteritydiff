@@ -18,6 +18,6 @@ You can enable versioning on Dexterity content types without this package, but t
 to add the correct "diff type" for each field of your content type.
 
 .. References
-.. _`Products.CMFDiffTool`: http://pypi.python.org/pypi/Products.CMFEditions
+.. _`Products.CMFDiffTool`: http://pypi.python.org/pypi/Products.CMFDiffTool
 .. _Dexterity: http://pypi.python.org/pypi/plone.app.dexterity
 .. _`plone.app.versioningbehavior`: http://pypi.python.org/pypi/plone.app.versioningbehavior
