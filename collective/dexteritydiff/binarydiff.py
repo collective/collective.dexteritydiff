@@ -1,9 +1,5 @@
 from Products.CMFDiffTool.BinaryDiff import BinaryDiff
 from plone.dexterity.interfaces import IDexterityFTI
-from z3c.form.interfaces import IDataManager
-from zope.component import getMultiAdapter, getUtility
-from zope.schema import getFields
-from plone.namedfile.utils import stream_data
 
 class DexterityBinaryDiff(BinaryDiff):
     
@@ -31,9 +27,3 @@ class DexterityBinaryDiff(BinaryDiff):
         if (self.oldFilename is not None) and (self.newFilename is not None) and self.same:
             self.same = (self.oldFilename == self.newFilename)
     
-#    def _get_data(self, obj):
-#        fti = getUtility(IDexterityFTI, name=obj.portal_type)
-#        schema = fti.lookupSchema()
-#        field_obj = getFields(schema)[self.field_name]        
-#        dm = getMultiAdapter((obj, field_obj), IDataManager)
-#        return dm.get().file
