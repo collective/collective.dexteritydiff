@@ -1,5 +1,7 @@
 from Products.CMFDiffTool.BinaryDiff import BinaryDiff
-from plone.dexterity.interfaces import IDexterityFTI
+from Products.CMFDiffTool.TextDiff import TextDiff
+from .filefields import named_file_as_str, is_same
+from plone.namedfile import NamedFile
 
 class DexterityBinaryDiff(BinaryDiff):
     
@@ -23,7 +25,17 @@ class DexterityBinaryDiff(BinaryDiff):
         self.oldFilename = getattr(old_field, 'filename', None)
         self.newFilename = getattr(new_field, 'filename', None)
         
-        self.same = (self.oldValue == self.newValue)
-        if (self.oldFilename is not None) and (self.newFilename is not None) and self.same:
-            self.same = (self.oldFilename == self.newFilename)
+        self.same = is_same(self.oldValue, self.oldFilename, self.newValue, self.newFilename)
+            
+    def _parseField(self, value, filename=None):
+        return [
+            '' if (value is None)
+            else named_file_as_str(NamedFile(data=value, filename=filename)) 
+        ]         
     
+    def inline_diff(self):
+        css_class = 'InlineDiff'
+        old = self._parseField(self.oldValue, self.oldFilename)[0]
+        new = self._parseField(self.newValue, self.newFilename)[0]
+            
+        return '' if self.same else self.inlinediff_fmt % (css_class, old, new)
