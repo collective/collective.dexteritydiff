@@ -1,10 +1,12 @@
 Changelog
 =========
 
-0.1b2 (unreleased)
+0.1b2 (2012-02-22)
 ------------------
 
-- Nothing changed yet.
+- Provide inline diff for date, time and datetime fields.
+- Provide inline diff for file and lists of files fields.
+- Sort fields taking into account plone.directives.form` ordering directives.
 
 
 0.1b1 (2011-07-12)
