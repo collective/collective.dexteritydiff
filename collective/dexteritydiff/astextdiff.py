@@ -1,5 +1,4 @@
 from Products.CMFDiffTool.TextDiff import TextDiff
-from plone.dexterity.interfaces import IDexterityFTI
 
 class AsTextDiff(TextDiff):
     """Specialization of `TextDiff` that convert any value to text to provide an inline diff.""" 

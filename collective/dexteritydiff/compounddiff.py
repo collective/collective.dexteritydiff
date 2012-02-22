@@ -115,7 +115,7 @@ class DexterityCompoundDiff(object):
         """
         Return a subclass of `Products.CMFEditions.BaseDiff.BaseDiff` suitable for the given 
         `zope.schema.Field` instance.
-        """
+        """        
         for (field_types, diff_type) in FIELDS_AND_DIFF_TYPES_RELATION:
             if isinstance(field, field_types):
                 if diff_type is ListDiff:
