@@ -1,14 +1,17 @@
+from .astextdiff import AsTextDiff
+from .binarydiff import DexterityBinaryDiff
+from .filefields import FILE_FIELD_TYPES
+from .filelistdiff import DexterityFileListDiff
 from Products.CMFDiffTool.FieldDiff import FieldDiff
 from Products.CMFDiffTool.ListDiff import ListDiff
 from Products.CMFDiffTool.TextDiff import TextDiff
+from plone.autoform.base import AutoFields
 from plone.dexterity.interfaces import IDexterityFTI
 from plone.dexterity.utils import getAdditionalSchemata
+from z3c.form.interfaces import INPUT_MODE
 from zope.component import getUtility
+from zope.globalrequest import getRequest
 from zope.schema import Bytes, Iterable, Container, Text, getFieldsInOrder, Date, Datetime, Time
-from .filefields import FILE_FIELD_TYPES
-from .binarydiff import DexterityBinaryDiff
-from .astextdiff import AsTextDiff
-from .filelistdiff import DexterityFileListDiff
 
 # TODO: Perhaps this can be replaced with some kind of Zope 3 style adaptation, in order to 
 # provide better extensibility.
@@ -72,10 +75,11 @@ class DexterityCompoundDiff(object):
         """
         fti = getUtility(IDexterityFTI, name=obj1.portal_type)
         default_schema = fti.lookupSchema()
-        
+        additional_schemata = getAdditionalSchemata(context=obj1)
+                
         diffs = self._diff_schema(obj1, obj2, default_schema, 'default')
         
-        for schema in getAdditionalSchemata(context=obj1):        
+        for schema in additional_schemata:        
             diffs.extend(self._diff_schema(obj1, obj2, schema, 'metadata'))
         
         return diffs
@@ -87,8 +91,8 @@ class DexterityCompoundDiff(object):
         Return: a sequence of `IDifference` objects.
         """
         return [
-            self._diff_field(obj1, obj2, field, schema_name)
-            for (name, field) in getFieldsInOrder(schema)
+            self._diff_field(obj1, obj2, schema[name], schema_name)
+            for name in self._compute_fields_order(schema) 
             if name not in EXCLUDED_FIELDS
         ]        
     
@@ -116,20 +120,44 @@ class DexterityCompoundDiff(object):
         Return a subclass of `Products.CMFEditions.BaseDiff.BaseDiff` suitable for the given 
         `zope.schema.Field` instance.
         """        
-        for (field_types, diff_type) in FIELDS_AND_DIFF_TYPES_RELATION:
-            if isinstance(field, field_types):
-                if diff_type is ListDiff:
-                    return self._get_diff_type_for_value_type(field.value_type) or diff_type
-                        
-                return diff_type
+        diff_type = self._compute_diff_type(field, FIELDS_AND_DIFF_TYPES_RELATION)
+        if diff_type is ListDiff:
+            return (
+                self._compute_diff_type(field.value_type, VALUE_TYPES_AND_DIFF_TYPES_RELATION) 
+                or diff_type
+            )
         
-        return FALL_BACK_DIFF_TYPE
+        return diff_type or FALL_BACK_DIFF_TYPE
     
-    def _get_diff_type_for_value_type(self, value_type):
-        for (value_types, diff_type) in VALUE_TYPES_AND_DIFF_TYPES_RELATION:
-            if isinstance(value_type, value_types):
-                return diff_type
+    def _compute_diff_type(self, field, relation):
+        """
+        Return the best "diff type" (subclass of `Products.CMFEditions.BaseDiff.BaseDiff`) suitable
+        for the given `zope.schema.Field` instance according to `relation`. The `relation` is
+        searched until a match is found. Return `None` otherwise.
+        
+        Parameters:
+        field -- `zope.schema.Field` instance.
+        relation -- Sequence of tuples (field_types, diff_type) where field_types is a  
+                    tuple of `zope.schema.Field` subclasses and diff_type
+                    is a `Products.CMFEditions.BaseDiff.BaseDiff` subclass.                    
+        """
+        
+        for (field_types, diff_type) in relation:
+            if isinstance(field, field_types):
+                return diff_type        
         
         return None
+    
+    def _compute_fields_order(self, schema):
+        """
+        Given a `schema` interface compute the field ordering the way `plone.autoform` does, i.e
+        taking into account `plone.directives.form` ordering directives.
         
-        
+        Return: a list of field names in order.
+        """        
+        auto_fields = AutoFields()
+        auto_fields.schema = schema
+        auto_fields.request = getRequest()
+        auto_fields.mode = INPUT_MODE        
+        auto_fields.updateFieldsFromSchemata()
+        return auto_fields.fields
