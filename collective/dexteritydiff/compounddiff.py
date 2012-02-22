@@ -126,7 +126,6 @@ class DexterityCompoundDiff(object):
         return FALL_BACK_DIFF_TYPE
     
     def _get_diff_type_for_value_type(self, value_type):
-        import pydevd;pydevd.settrace()
         for (value_types, diff_type) in VALUE_TYPES_AND_DIFF_TYPES_RELATION:
             if isinstance(value_type, value_types):
                 return diff_type

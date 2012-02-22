@@ -40,7 +40,18 @@ class PackageLayer(PloneSandboxLayer):
                     <field name="file" type="plone.namedfile.field.NamedFile">
                         <title>File</title>
                         <required>False</required>
-                    </field>                    
+                    </field>            
+                    <field name="date" type="zope.schema.Date">
+                        <title>Date</title>
+                        <required>False</required>                        
+                    </field>                      
+                    <field name="files" type="zope.schema.List">
+                        <title>Date</title>
+                        <required>False</required>
+                        <value_type type="plone.namedfile.field.NamedFile">
+                            <title>Val</title>
+                        </value_type>
+                    </field>                                                      
                 </schema>
             </model>
             '''
