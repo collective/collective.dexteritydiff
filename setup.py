@@ -28,6 +28,7 @@ setup(name='collective.dexteritydiff',
           'z3c.autoinclude',
           'Products.CMFDiffTool',
           'plone.dexterity',
+          'zope.i18nmessageid',
       ],
       extras_require = {
         'test': [

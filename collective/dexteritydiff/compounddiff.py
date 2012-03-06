@@ -11,14 +11,17 @@ from plone.dexterity.utils import getAdditionalSchemata
 from z3c.form.interfaces import INPUT_MODE
 from zope.component import getUtility
 from zope.globalrequest import getRequest
-from zope.schema import Bytes, Iterable, Container, Text, getFieldsInOrder, Date, Datetime, Time
+from zope.schema import (Bytes, Iterable, Container, Text, getFieldsInOrder, Date, Datetime, Time, 
+    Choice, Bool)
+from .booldiff import BoolDiff
 
 # TODO: Perhaps this can be replaced with some kind of Zope 3 style adaptation, in order to 
 # provide better extensibility.
 FIELDS_AND_DIFF_TYPES_RELATION = [
     (FILE_FIELD_TYPES, DexterityBinaryDiff),
     ((Iterable, Container), ListDiff),
-    ((Date, Datetime, Time), AsTextDiff),
+    ((Date, Datetime, Time, Choice), AsTextDiff),
+    ((Bool,), BoolDiff),
     ((Text, Bytes), TextDiff),
 ]
 """
