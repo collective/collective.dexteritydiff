@@ -25,4 +25,15 @@ class AsTextDiffTestCase(unittest.TestCase):
         diff = AsTextDiff(DummyType(d1), DummyType(d2), 'date')
         self.assertTrue(IDifference.providedBy(diff))
         self.assertEqual(diff.same, same)
-        self.assertNotEqual(bool(diff.inline_diff()), same)               
+
+        inline_diff = diff.inline_diff()
+        if same:
+            self.assertFalse(inline_diff)
+        else:
+            self.assertTrue(inline_diff)
+            if d1 is not None:
+                self.assertTrue(str(d1) in inline_diff)
+            if d2 is not None:
+                self.assertTrue(str(d2) in inline_diff)
+                
+            #self.assertFalse('None' in inline_diff)
