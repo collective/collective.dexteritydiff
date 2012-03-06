@@ -4,7 +4,7 @@ Changelog
 0.1b3 (unreleased)
 ------------------
 
-- Nothing changed yet.
+- Added BoolDiff.
 
 
 0.1b2 (2012-02-22)
