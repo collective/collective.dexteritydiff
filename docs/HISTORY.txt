@@ -4,7 +4,7 @@ Changelog
 0.1b4 (unreleased)
 ------------------
 
-- Nothing changed yet.
+- Added ChoiceDiff.
 
 
 0.1b3 (2012-03-06)

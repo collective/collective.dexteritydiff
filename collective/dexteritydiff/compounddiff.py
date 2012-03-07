@@ -1,27 +1,27 @@
 from .astextdiff import AsTextDiff
 from .binarydiff import DexterityBinaryDiff
+from .booldiff import BoolDiff
+from .choicediff import ChoiceDiff
 from .filefields import FILE_FIELD_TYPES
 from .filelistdiff import DexterityFileListDiff
+from .utils import get_schemas
 from Products.CMFDiffTool.FieldDiff import FieldDiff
 from Products.CMFDiffTool.ListDiff import ListDiff
 from Products.CMFDiffTool.TextDiff import TextDiff
 from plone.autoform.base import AutoFields
-from plone.dexterity.interfaces import IDexterityFTI
-from plone.dexterity.utils import getAdditionalSchemata
 from z3c.form.interfaces import INPUT_MODE
-from zope.component import getUtility
 from zope.globalrequest import getRequest
 from zope.schema import (Bytes, Iterable, Container, Text, getFieldsInOrder, Date, Datetime, Time, 
     Choice, Bool)
-from .booldiff import BoolDiff
 
 # TODO: Perhaps this can be replaced with some kind of Zope 3 style adaptation, in order to 
 # provide better extensibility.
 FIELDS_AND_DIFF_TYPES_RELATION = [
     (FILE_FIELD_TYPES, DexterityBinaryDiff),
     ((Iterable, Container), ListDiff),
-    ((Date, Datetime, Time, Choice), AsTextDiff),
+    ((Date, Datetime, Time), AsTextDiff),
     ((Bool,), BoolDiff),
+    ((Choice,), ChoiceDiff),
     ((Text, Bytes), TextDiff),
 ]
 """
@@ -75,13 +75,9 @@ class DexterityCompoundDiff(object):
         Compute the differences between 2 objects.
         
         Return: a sequence of `IDifference` objects.
-        """
-        fti = getUtility(IDexterityFTI, name=obj1.portal_type)
-        default_schema = fti.lookupSchema()
-        additional_schemata = getAdditionalSchemata(context=obj1)
-                
-        diffs = self._diff_schema(obj1, obj2, default_schema, 'default')
-        
+        """        
+        (default_schema, additional_schemata) = get_schemas(obj1)                
+        diffs = self._diff_schema(obj1, obj2, default_schema, 'default')        
         for schema in additional_schemata:        
             diffs.extend(self._diff_schema(obj1, obj2, schema, 'metadata'))
         

@@ -4,9 +4,21 @@ from plone.app.testing import (IntegrationTesting, PLONE_FIXTURE,
 from .config import PACKAGE_NAME
 from Products.CMFCore.utils import getToolByName
 from plone.dexterity.fti import DexterityFTI
-
+from zope.schema.vocabulary import SimpleVocabulary, SimpleTerm, getVocabularyRegistry
+from zope.component import provideUtility, getGlobalSiteManager, getSiteManager
+from zope.schema.interfaces import IVocabularyFactory
 
 TEST_CONTENT_TYPE_ID = 'TestContentType'
+
+VOCABULARY_TUPLES = [
+    (u'first_value', u'First Title'),
+    (u'second_value', None),
+]
+
+VOCABULARY = SimpleVocabulary([SimpleTerm(value=v, title=t) for (v, t) in VOCABULARY_TUPLES])
+
+def vocabulary_factory(context):
+    return VOCABULARY
 
 class PackageLayer(PloneSandboxLayer):
 
@@ -20,6 +32,13 @@ class PackageLayer(PloneSandboxLayer):
 
     def setUpPloneSite(self, portal):
         types_tool = getToolByName(portal, 'portal_types')
+        
+        sm = getSiteManager(portal)
+        sm.registerUtility(
+            component=vocabulary_factory, 
+            provided=IVocabularyFactory, 
+            name=u'collective.dexteritydiff.testing.VOCABULARY'
+        )
         
         fti = DexterityFTI(
             TEST_CONTENT_TYPE_ID,
@@ -51,7 +70,12 @@ class PackageLayer(PloneSandboxLayer):
                         <value_type type="plone.namedfile.field.NamedFile">
                             <title>Val</title>
                         </value_type>
-                    </field>                                                      
+                    </field>   
+                    <field name="choice" type="zope.schema.Choice">
+                        <title>Choice</title>
+                        <required>False</required>
+                        <vocabulary>collective.dexteritydiff.testing.VOCABULARY</vocabulary>
+                    </field>                                                                       
                 </schema>
             </model>
             '''

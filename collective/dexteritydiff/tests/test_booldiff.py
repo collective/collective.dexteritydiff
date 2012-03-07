@@ -21,7 +21,6 @@ class BoolDiffTestCase(unittest.TestCase):
         self._test_diff_bool(True, False, False)
         self._test_diff_bool(True, True, True)
         
-        import pydevd;pydevd.settrace()
         self._test_diff_bool(False, None, False)
         
         self._test_diff_bool(True, None, False)
