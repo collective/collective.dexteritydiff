@@ -1,7 +1,7 @@
 from setuptools import setup, find_packages
 import os
 
-version = '0.1b4-dev'
+version = '0.1b4'
 
 setup(name='collective.dexteritydiff',
       version=version,

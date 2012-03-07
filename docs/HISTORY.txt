@@ -1,7 +1,7 @@
 Changelog
 =========
 
-0.1b4 (unreleased)
+0.1b4 (2012-03-07)
 ------------------
 
 - Added ChoiceDiff.
