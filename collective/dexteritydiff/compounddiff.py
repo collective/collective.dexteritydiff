@@ -4,7 +4,9 @@ from .booldiff import BoolDiff
 from .choicediff import ChoiceDiff
 from .filefields import FILE_FIELD_TYPES
 from .filelistdiff import DexterityFileListDiff
+from .richtextdiff import RichTextDiff
 from .utils import get_schemas
+from plone.app.textfield import RichText
 from Products.CMFDiffTool.FieldDiff import FieldDiff
 from Products.CMFDiffTool.ListDiff import ListDiff
 from Products.CMFDiffTool.TextDiff import TextDiff
@@ -23,6 +25,7 @@ FIELDS_AND_DIFF_TYPES_RELATION = [
     ((Bool,), BoolDiff),
     ((Choice,), ChoiceDiff),
     ((Text, Bytes), TextDiff),
+    ((RichText,), RichTextDiff),
 ]
 """
 Relates field types (`zope.schema.Field` subclasses) and "diff types"

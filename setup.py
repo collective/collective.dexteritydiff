@@ -28,9 +28,10 @@ setup(name='collective.dexteritydiff',
           'z3c.autoinclude',
           'Products.CMFDiffTool',
           'plone.dexterity',
+          'plone.app.textfield',
           'zope.i18nmessageid',
       ],
-      extras_require = {
+      extras_require={
         'test': [
             'Plone',
             'plone.app.dexterity',
@@ -38,7 +39,7 @@ setup(name='collective.dexteritydiff',
             'plone.namedfile',
             'plone.formwidget.namedfile',
         ]
-      },      
+      },
       entry_points="""
       # -*- Entry points: -*-
       """,
