@@ -7,7 +7,13 @@ def title_or_value(vocabulary, value):
     Given a `vocabulary` and a `value` in that vocabulary, return the corresponding title or 
     `value` if there is no title.
     """
-    return vocabulary.getTerm(value).title or value
+    try:
+        return vocabulary.getTerm(value).title or value
+    except LookupError:
+        # can happen in some cases, e.g. when using
+        # zope.schema.vocabulary.TreeVocabulary
+        # XXX: There might be a better solution than just returning the value
+        return value
 
 def get_schemas(obj):
     """Return a tuple (schema, additional_schemata)."""    
