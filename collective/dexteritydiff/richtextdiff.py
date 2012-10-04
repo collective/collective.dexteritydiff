@@ -11,4 +11,6 @@ class RichTextDiff(CMFDTHtmlDiff):
         """Parse the field using the raw value from RichTextValue."""
         if value is None:
             value = ''
-        return CMFDTHtmlDiff._parseField(self, value.raw, filename)
+        else:
+            value = value.raw
+        return CMFDTHtmlDiff._parseField(self, value, filename)

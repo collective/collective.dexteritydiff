@@ -13,6 +13,16 @@ class DummyType(object):
 class RichTextDiffTestCase(unittest.TestCase):
     """Test RichTextDiff"""
 
+    def test_parseField_value_is_none(self):
+        value = None
+        diff = RichTextDiff(DummyType(value), DummyType(value), 'body')
+        self.assertEqual(diff._parseField(value), [])
+
+    def test_parseField_value_is_not_none(self):
+        value = RichTextValue(u'foo')
+        diff = RichTextDiff(DummyType(value), DummyType(value), 'body')
+        self.assertEqual(diff._parseField(value), [u'foo'])
+
     def test_inline_diff_same(self):
         value = RichTextValue(u'foo')
         diff = RichTextDiff(DummyType(value), DummyType(value), 'body')
