@@ -6,7 +6,7 @@ try:
     from plone.namedfile import field
     FILE_FIELD_TYPES.extend([field.NamedFile, field.NamedImage])
 
-    if field.HAVE_BLOBS:
+    if getattr(field, 'HAVE_BLOBS', True):
         FILE_FIELD_TYPES.extend([field.NamedBlobFile, field.NamedBlobImage])
 except ImportError:
     pass

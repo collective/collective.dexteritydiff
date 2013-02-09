@@ -1,6 +1,6 @@
 from collective.dexteritydiff.astextdiff import AsTextDiff
 from collective.dexteritydiff.i18n import MessageFactory as _
-from zope.app.component.hooks import getSite
+from zope.component.hooks import getSite
 
 
 class BoolDiff(AsTextDiff):
