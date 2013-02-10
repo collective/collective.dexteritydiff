@@ -4,8 +4,8 @@ Changelog
 0.2 (Unreleased)
 ----------------
 
-- Merge this package into plone.app.versioningbehavior and it is
-  incompatible with plone.app.versioningbehavior >= 1.1.1.
+- Merge this package into Products.CMFDiffTool and it is incompatible
+  with Products.CMFDiffTool >= 2.0.2.
   [rpatterson]
 
 0.1b4 (2012-03-07)

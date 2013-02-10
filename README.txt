@@ -1,2 +1,2 @@
-This package has been merged into plone.app.versioningbehavior and is
-incompatible with plone.app.versioningbehavior >= 1.1.1.
+This package has been merged into Products.CMFDiffTool and is
+incompatible with Products.CMFDiffTool >= 2.0.2.
